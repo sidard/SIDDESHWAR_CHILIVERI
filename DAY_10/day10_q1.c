@@ -21,11 +21,11 @@ int main()
 	u_char G_Eng_EngineTemperature = 50 ;
         u_int  G_Eng_EngineRpm = 1000;
 	puts("Binary data stored in G_Eng_EngineTemperature:");
-  for(int i =7;i>=0;i--)
+  for(int i =31;i>=0;i--)
         printf("%d ",(G_Eng_EngineTemperature>>i)&1);
 
 	puts("\nBinary data stored in G_Eng_EngineRpm:");
-   for(int i =31;i>=0;i--)
+   for(int i =7;i>=0;i--)
         printf("%d ",(G_Eng_EngineRpm>>i)&1);
 
 	StoreData(G_Eng_EngineTemperature,G_Eng_EngineRpm);
@@ -40,7 +40,7 @@ void StoreData(u_char G_Eng_EngineTemperature ,u_int G_Eng_EngineRpm)
   
 	G_Msg_EngineInformation_Byte[0] = (G_Eng_EngineRpm>>9)&0x0F;//G_Eng_EngineRpm 12-9 bits
 	G_Msg_EngineInformation_Byte[1] = (G_Eng_EngineRpm>>1)&0xFF;//G_Eng_EngineRpm 8-1 bits
-	G_Msg_EngineInformation_Byte[2] =  (G_Eng_EngineRpm &(1<<0))<<7;//G_Eng_EngineRpm 0th bit
+	G_Msg_EngineInformation_Byte[2] =  (G_Eng_EngineRpm<<7);//G_Eng_EngineRpm 0th bit
 	G_Msg_EngineInformation_Byte[3] =  G_Eng_EngineTemperature;//G_Eng_EngineTemperature 7-0 bits
 	
    for(i=0;i<5;i++)
