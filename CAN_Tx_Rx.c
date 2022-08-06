@@ -68,11 +68,14 @@
 #define LED_2 RA1
 
 enum Tx_Buffer{Transfer_Buffer_0, Transfer_Buffer_1, Transfer_Buffer_2};  
-enum Rx_Buffer{Receiver_Buffer_0, Receiver_Buffer_1, Receiver_Buffer_2};  
+enum Rx_Buffer{Receiver_Buffer_0, Receiver_Buffer_1};  
 
-
-char Rx_data_bytes_11[11]={0};
-char Tx_Message_data_0[]= {0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88};
+char Rx_data_11bytes_Buffer_0[11]={0};
+char Rx_data_11bytes_Buffer_1[11]={0};
+char Rx_data_11bytes_Buffer_2[11]={0};
+char Tx_data_8bytes_Buffer_0[8]= {0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88};
+char Tx_data_8bytes_Buffer_1[8]= {0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08};
+char Tx_data_8bytes_Buffer_2[8]= {0x10,0x20,0x30,0x40,0x50,0x60,0x70,0x80};
     
 int Sys_Init()
 {
@@ -157,121 +160,61 @@ void Set_Mask()     //acceptance mack function
     
 }
 
-//int Write_fun(short int Transfer_buffer, short int Message_id, long long int *data)
 int Tx_Buffer(char Transfer_buffer)
 { 
-       //char Tx_Message_data2[]= {0x1,0x2,0x3,0x4,0x5,0x6,0x7,0x8};
-     // char Tx_Message_data3[]= {0x10,0x20,0x30,0x40,0x50,0x60,0x70,0x80};
     switch(Transfer_buffer)
     {
-        //selecting Transfer buffer and  setting to Normal Mode
-        //if(Transfer_buffer == 0)//100 = Transmit Buffer 0
         case 0:
             CANCON = CANCON_TransmitBuffer_0;
             TXB0SIDH=0x0C;
             TXB0SIDL=0x80;
             TXB0DLC = 0x08;
-          
-            //Assigning the 0th byte of data  to  byte of the TXB0D1
-            TXB0D0 = Tx_Message_data_0[0];
-            //Assigning the 1st byte of data  to  byte of the TXB0D2
-            TXB0D1 = Tx_Message_data_0[1];
-            //Assigning the 2nd byte of data  to  byte of the TXB0D3
-            TXB0D2 = Tx_Message_data_0[2];
-            //Assigning the 3rd byte of data  to  byte of the TXB0D4
-            TXB0D3 = Tx_Message_data_0[3];
-            //Assigning the 4th byte of data  to  byte of the TXB0D5
-            TXB0D4 = Tx_Message_data_0[4];
-            //Assigning the 5th byte of data  to  byte of the TXB0D6
-            TXB0D5 = Tx_Message_data_0[5];
-            //Assigning the 6th byte of data  to  byte of the TXB0D7
-            TXB0D6 = Tx_Message_data_0[6];
-            //Assigning the 7th byte of data  to  byte of the TXB0D8
-            TXB0D7 = Tx_Message_data_0[7];
+            TXB0D0 = Tx_data_8bytes_Buffer_0[0];
+            TXB0D1 = Tx_data_8bytes_Buffer_0[1];
+            TXB0D2 = Tx_data_8bytes_Buffer_0[2];
+            TXB0D3 = Tx_data_8bytes_Buffer_0[3];
+            TXB0D4 = Tx_data_8bytes_Buffer_0[4];
+            TXB0D5 = Tx_data_8bytes_Buffer_0[5];
+            TXB0D6 = Tx_data_8bytes_Buffer_0[6];
+            TXB0D7 = Tx_data_8bytes_Buffer_0[7];
             //enable the TXBnCON  such that the transmitter buffer and assign the highest priority to the chosen buffer.
             TXB0CON = TransmitAtHighPriority;
             break;
             
-            // else if(Transfer_buffer == 1)//011 = Transmit Buffer 1
-       /* case 1:
+        case 1:
             CANCON = CANCON_TransmitBuffer_1;
-            //assign the Message ID High byte to TXBnSIDH (High Byte Register).
-            //Assign the Message ID Low byte to TXBnSIDL (Low Byte Register).
-            TXB1SIDL = (0x07 & Message_id) << 5;//for LSB 3 bits
-            TXB1SIDH = (0x7F8 & Message_id) >> 3;//for MSB 8 bits
-            /*Set the length of the messages to 8 bytes in the TXBnDLC
-             1000 = Data Length = 8 bytes
-             0 = Transmitted message will have TXRTR bit cleared
+            TXB1SIDL = 0x00 ;
+            TXB1SIDH = 0x00;
             TXB1DLC = 0x08;
-            char *msg_data = data;
-            //Assigning the 0th byte of data  to  byte of the TXB1D1
-            TXB1D0 = *msg_data;
-            msg_data++;
-            //Assigning the 1st byte of data  to  byte of the TXB1D2
-            TXB1D1 = *msg_data;
-            msg_data++;
-            //Assigning the 2nd byte of data  to  byte of the TXB1D3
-            TXB1D2 = *msg_data;
-            msg_data++;
-            //Assigning the 3rd byte of data  to  byte of the TXB1D4
-            TXB1D3 = *msg_data;
-            msg_data++;
-            //Assigning the 4th byte of data  to  byte of the TXB1D5
-            TXB1D4 = *msg_data;
-            msg_data++;
-            //Assigning the 5th byte of data  to  byte of the TXB1D6
-            TXB1D5 = *msg_data;
-            msg_data++;
-            //Assigning the 6th byte of data  to  byte of the TXB1D7
-            TXB1D6 = *msg_data;
-            msg_data++;
-            //Assigning the 7th byte of data  to  byte of the TXB1D8
-            TXB1D7 = *msg_data;
-            msg_data++;
-            //enable the TXBnCON  such that the transmitter buffer and assign the highest priority to the chosen buffer.
+            TXB1D0 = Tx_data_8bytes_Buffer_1[0];
+            TXB1D1 = Tx_data_8bytes_Buffer_1[1];
+            TXB1D2 = Tx_data_8bytes_Buffer_1[2];
+            TXB1D3 = Tx_data_8bytes_Buffer_1[3];
+            TXB1D4 = Tx_data_8bytes_Buffer_1[4];
+            TXB1D5 = Tx_data_8bytes_Buffer_1[5];
+            TXB1D6 = Tx_data_8bytes_Buffer_1[6];
+            TXB1D7 = Tx_data_8bytes_Buffer_1[7];
+             //enable the TXBnCON  such that the transmitter buffer and assign the highest priority to the chosen buffer.
             TXB1CON = TransmitAtHighPriority;
-            break;*/
-            /*
+            break;
+           
             // else if(Transfer_buffer == 2)//010 = Transmit Buffer 2
         case 2:
             CANCON = CANCON_TransmitBuffer_2;            
-            TXB2SIDL = (0x07 & Message_id) << 5;//for LSB 3 bits
-            TXB2SIDH = (0x7F8 & Message_id) >> 3;//for MSB 8 bits
-                   
-            //Set the length of the messages to 8 bytes in the TXBnDLC
-            //1000 = Data Length = 8 bytes
-            //0 = Transmitted message will have TXRTR bit cleared
+            TXB2SIDL = 0x00;//for LSB 3 bits
+            TXB2SIDH = 0x01;//for MSB 8 bits
             TXB2DLC = 0x08;
-            
-            
-            char *msg_data = data;
-            //Assigning the 0th byte of data  to  byte of the TXB2D1
-            TXB2D0 = *msg_data;
-            msg_data++;
-            //Assigning the 1st byte of data  to  byte of the TXB2D2
-            TXB2D1 = *msg_data;
-            msg_data++;
-            //Assigning the 2nd byte of data  to  byte of the TXB2D3
-            TXB2D2 = *msg_data;
-            msg_data++;
-            //Assigning the 3rd byte of data  to  byte of the TXB2D4
-            TXB2D3 = *msg_data;
-            msg_data++;
-            //Assigning the 4th byte of data  to  byte of the TXB2D5
-            TXB2D4 = *msg_data;
-            msg_data++;
-            //Assigning the 5th byte of data  to  byte of the TXB2D6
-            TXB2D5 = *msg_data;
-            msg_data++;
-            //Assigning the 6th byte of data  to  byte of the TXB2D7
-            TXB2D6 = *msg_data;
-            msg_data++;
-            //Assigning the 7th byte of data  to  byte of the TXB2D1
-            TXB2D7 = *msg_data;
-            msg_data++;
+            TXB2D0 = Tx_data_8bytes_Buffer_2[0];
+            TXB2D1 = Tx_data_8bytes_Buffer_2[1];
+            TXB2D2 = Tx_data_8bytes_Buffer_2[2];
+            TXB2D3 = Tx_data_8bytes_Buffer_2[3];
+            TXB2D4 = Tx_data_8bytes_Buffer_2[4];
+            TXB2D5 = Tx_data_8bytes_Buffer_2[5];
+            TXB2D6 = Tx_data_8bytes_Buffer_2[6];
+            TXB2D7 = Tx_data_8bytes_Buffer_2[7];
             
             //enable the TXBnCON  such that the transmitter buffer and assign the highest priority to the chosen buffer.
-            TXB2CON = TransmitAtHighPriority;*/
+            TXB2CON = TransmitAtHighPriority;
         default://No code line statement
             ;
     }//switch ends  
@@ -281,17 +224,17 @@ int Tx_Buffer(char Transfer_buffer)
 void CAN_Read_fun()
 {
     CANCON=0x0C;//Select Normal Mode and Select Receive Buffer_0.   
-    Rx_data_bytes_11[0] =  RXB0D0;//data_byte_0
-    Rx_data_bytes_11[1] =  RXB0D1;//data_byte_1
-    Rx_data_bytes_11[2] =  RXB0D2;//data_byte_2
-    Rx_data_bytes_11[3] =  RXB0D3;//data_byte_3
-    Rx_data_bytes_11[4] =  RXB0D4;//data_byte_4
-    Rx_data_bytes_11[5] =  RXB0D5;//data_byte_5
-    Rx_data_bytes_11[6] =  RXB0D6;//data_byte_6
-    Rx_data_bytes_11[7] =  RXB0D7;//data_byte_7 
-    Rx_data_bytes_11[8] =  RXB0SIDL;//LowByte_3bits
-    Rx_data_bytes_11[9] =  RXB0SIDH ;//HigherByte_8bits
-    Rx_data_bytes_11[10] =  RXB0DLC;//DLC 
+    Rx_data_11bytes_Buffer_0[0] =  RXB0D0;//data_byte_0
+    Rx_data_11bytes_Buffer_0[1] =  RXB0D1;//data_byte_1
+    Rx_data_11bytes_Buffer_0[2] =  RXB0D2;//data_byte_2
+    Rx_data_11bytes_Buffer_0[3] =  RXB0D3;//data_byte_3
+    Rx_data_11bytes_Buffer_0[4] =  RXB0D4;//data_byte_4
+    Rx_data_11bytes_Buffer_0[5] =  RXB0D5;//data_byte_5
+    Rx_data_11bytes_Buffer_0[6] =  RXB0D6;//data_byte_6
+    Rx_data_11bytes_Buffer_0[7] =  RXB0D7;//data_byte_7 
+    Rx_data_11bytes_Buffer_0[8] =  RXB0SIDL;//LowByte_3bits
+    Rx_data_11bytes_Buffer_0[9] =  RXB0SIDH ;//HigherByte_8bits
+    Rx_data_11bytes_Buffer_0[10] =  RXB0DLC;//DLC 
     
     RXB0CONbits.RXB0FUL = 0;
     CANCON=NormalMode_0x00;//Resetting the Receiver Buffer_0 000 and set mode to Normal Mode  to get next data
@@ -327,13 +270,15 @@ void main(void) {
         __delay_ms(5000);        
         for(char i=0;i<8;i++)
         {  
-            if(Rx_data_bytes_11[i] == Tx_Message_data_0[i])//Set 88 is first byte D1 in Bus Analyser Software
+            if(Rx_data_11bytes_Buffer_0[i] == Tx_data_8bytes_Buffer_0[i])
             {             
                 LED_2 = 1;//Notification of Interrupt LED 2
                 __delay_ms(5000);
                 LED_2 = 0;
-                Rx_data_bytes_11[i]=0;//Clearing the Received Global Data
-            }
-        }
+                Rx_data_11bytes_Buffer_0[i]=0;//Clearing the Received Global Data
+            }//if
+        //for
     }//while
 }
+}
+
